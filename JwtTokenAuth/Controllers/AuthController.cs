@@ -52,7 +52,7 @@ namespace JwtTokenAuth.Controllers
 
         private string CreateToken(User user)
         {
-            string? appSettingsToken = _configuration.GetSection("AppSettings:Token").Value;
+            string? appSettingsToken = _configuration.GetSection("Authentication:Schemes:Bearer:SigningKeys:0:Value").Value;
 
             List<Claim> claims = new()
             {
