@@ -52,11 +52,13 @@ namespace JwtTokenAuth.Controllers
 
         private string CreateToken(User user)
         {
-            string? appSettingsToken = _configuration.GetSection("Authentication:Schemes:Bearer:SigningKeys:0:Value").Value;
+            string? appSettingsToken = _configuration.GetSection("AppSettings:Token").Value;
 
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),  
+                new Claim(ClaimTypes.Role, "Admin"),
+                new Claim(ClaimTypes.Role, "User")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettingsToken!));
