@@ -1,5 +1,6 @@
 ﻿using JwtTokenAuth.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
+using JwtTokenAuth.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,10 +15,18 @@ namespace JwtTokenAuth.Controllers
     {
         public static User user = new();
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
+            _userService = userService;
+        }
+
+        [HttpGet, Authorize]
+        public ActionResult<string> GetMyName()
+        {
+            return Ok(_userService.GetMyName());
         }
 
 
@@ -56,7 +65,7 @@ namespace JwtTokenAuth.Controllers
 
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.Name, user.Username),  
+                new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, "Admin"),
                 new Claim(ClaimTypes.Role, "User")
             };
